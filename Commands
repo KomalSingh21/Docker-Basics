@@ -1,0 +1,153 @@
+Task 1: Creating your first Docker container
+
+1.Create your first docker container from the image hello-world using docker run command and verify the docker installation is proper 
+# docker run hello-world
+ 
+Task 2: Basic Commands to run the Container in Interactive mode
+
+1.Pull the ubuntu:latest image from the DockerHub public registry using docker pull command
+# docker pull ubuntu
+   
+
+2.Use the below command to list the docker images which are pulled to the system
+# docker image ls
+ 
+
+3.Create a docker container from the existing ubuntu docker image. Use the below command to create and start a container with container name as ct1 and switch to the containers shell using -it (interactive terminal) option
+
+# docker run -it --name ct1 ubuntu
+ 
+
+4.Create some files inside the container using touch command
+
+# touch f1 f2 f3
+# ls
+ 
+
+5.Exit from the container by using exit command to switch back to Docker Host and check for running containers using docker ps command, you will not see any running containers. Check docker ps -a command you will see both containers are in Exited state
+
+# exit
+# docker ps
+# docker ps -a
+ 
+ 
+
+6.Create another docker container named ct2 using the ubuntu image
+
+# docker run -it --name ct2 ubuntu
+ 
+
+7.Come out of the container’s shell to Docker host shell using Crtl+P+Q and check the container status using docker ps command
+
+# docker ps
+ 
+
+8.Use the docker exec -it command to get a second shell in the container
+
+# docker exec -it < container id/name > /bin/sh
+
+
+9.Exit the container using exit command and check the container status using docker ps. The container status will be still be UP as we have exited from the secondary shell and primary shell is still running inside the container
+
+# exit
+# docker ps
+ 
+
+
+10.Use the docker attach command to enter the primary shell of the container
+
+# docker attach < container id/name >
+
+
+11.	Now exit the container to kill the primary process of the container and check the status of the container using docker ps command the container will not be running, check the docker ps -a command to verify that the container is in Exited state
+
+# exit
+# docker ps
+# docker ps -a
+ 
+
+Task 3: Port Mapping from Docker Host to container
+
+1.	Create and start an apache application container from image httpd in detached mode using docker run -d command, use -p option to bind the host port to container port. In this example we will bind port number 80 of the Docker Host (LHS) to map to port number 80 (RHS) of the container using -p 80:80. Notice that we are not going inside container as we are not using interactive mode, the container will be running in the background if use –d flag
+
+# docker run -d -p 80:80 httpd
+ 
+
+2.Verify the container status is UP using docker ps command, also see the port mapping rule in the ports section
+# docker ps
+ 
+
+3.Copy the EC2 PublicIP of Docker Host from AWS Console, paste it in browser to verify the working of apache, you will get a “It works!” page
+
+ 
+4.Use the command docker exec -it to get a shell in the container
+# docker exec -it < container id/name > /bin/bash
+
+  
+5.Exit from the container and check the docker container status. It will be still UP as we entered the shell as a secondary process and for this container primary process is apache
+# exit
+# docker ps
+
+
+
+6.Use the command docker exec -it to get back to the shell of the container
+# docker exec -it < container id/name > /bin/bash
+
+ 
+7.Apply kill command on the primary process of the container (PID 1). The container will be exited as the primary process got exited, verify the status is exited using docker ps -a command
+# kill 1
+# docker ps -a
+ 
+
+8.Clean up of resources created in this lab by below command for each container and images.
+# docker container stop < container id/name >
+# docker container rm < container id/name >
+# docker image ls
+# docker image rm < image id >
+ 
+ 
+Docker Lifecycle 
+1.Run the following command to pull httpd image from Docker Hub
+# docker pull httpd
+
+2.Check the pulled httpd image by running below command
+# docker image ls
+
+3.Check the httpd image layers using docker image history
+# docker image history httpd
+
+4.Create docker container read write layer using below command of the above pulled image
+# docker container create httpd
+
+5.Check the status of the container just created, the status should be created
+# docker container ls -a
+
+6.Start the container using below command
+# docker container start < container id/name >
+
+7.Check the status of the started container as “Up”
+# docker container ls
+
+8.Stop the container using below command
+# docker container stop < container id/Name >
+
+9.Verify the status of the container is “Exited”
+# docker container ls -a
+
+10.Again, start the container by running below command
+# docker container start < container id/Name >
+# docker container ls -a
+
+11.Pause the running container
+# docker container pause < container id/Name >
+
+12.Check the status of container as “Paused”
+# docker container ls -a
+
+13.Now unpause the container
+# docker container unpause < container id/Name >
+
+14.Check the status of container after unpause
+# docker container ls -a
+
+
